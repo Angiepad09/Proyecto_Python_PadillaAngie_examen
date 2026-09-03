@@ -1,0 +1,46 @@
+[
+    {
+        "dia": "Lunes",
+        "eventos": [
+            {
+                "materia": "Fisica",
+                "hora_inicio": "10:00",
+                "hora_fin": "12:00",
+                "ubicacion": ""
+            }
+        ]
+    },
+    {
+        "dia": "Martes",
+        "eventos": [
+            {
+                "materia": "Deporte",
+                "hora_inicio": "11:00",
+                "hora_fin": "13:00",
+                "ubicacion": ""
+            }
+        ]
+    },
+    {
+        "dia": "Miercoles",
+        "eventos": [
+            {
+                "materia": "Artistica",
+                "hora_inicio": "9:00",
+                "hora_fin": "11:00",
+                "ubicacion": "Salon 404"
+            }
+        ]
+    },
+    {
+        "dia": "Viernes",
+        "eventos": [
+            {
+                "materia": "Programacion",
+                "hora_inicio": "9:00",
+                "hora_fin": "10:00",
+                "ubicacion": "Salon 202"
+            }
+        ]
+    }
+]
