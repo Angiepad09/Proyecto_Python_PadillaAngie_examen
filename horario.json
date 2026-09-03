@@ -26,5 +26,12 @@
         "hora_inicio": "9:00",
         "hora_fin": "10:00",
         "ubicacion": "Salon 202"
+    },
+    {
+        "materia": "Fisica",
+        "dia": "Viernes",
+        "hora_inicio": "14:00",
+        "hora_fin": "16:00",
+        "ubicacion": "Laboratorio fisica"
     }
 ]

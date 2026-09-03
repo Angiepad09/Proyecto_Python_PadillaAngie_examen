@@ -54,7 +54,7 @@ def registrar_actividad(horario_semanal):
     horario_semanal.append(horario_temporal)
     guardar_horario(horario_semanal)
     
-    print(f"La materia '{materia}' ha sido registrada exitosamente el '{dia}' de '{hora_inicio}' a '{hora_fin}' en '{ubicacion}'\n")
+    print(f"La materia '{materia}' ha sido registrada exitosamente el {dia} de {hora_inicio} a {hora_fin} en {ubicacion}\n")
 
 def mostrar_horario():
 
@@ -95,9 +95,9 @@ def mostrar_horario():
             print(f"| {materia:<15}", end="")
 
         print()
-
-    
+        
 def modificar_actividad():
+
     horario = cargar_horario()
 
     if not horario:
@@ -106,40 +106,73 @@ def modificar_actividad():
 
     materia_buscar = input("Ingrese el nombre de la materia o actividad a modificar-> ").strip().capitalize()
 
-    actividad_encontrada = None
-    indice = None
+    coincidencias = []
 
     for i, actividad in enumerate(horario):
         if actividad["materia"] == materia_buscar:
-            actividad_encontrada = actividad
-            indice = i
-            break
+            coincidencias.append((i, actividad))
 
-    if actividad_encontrada is None:
+    if len(coincidencias) == 0:
         print(f'No se pudo modificar la materia "{materia_buscar}" porque no existe.\n')
         return False
 
-    nuevo_dia = input("Ingrese el nuevo día de la semana-> ").strip().capitalize()
+    if len(coincidencias) == 1:
+        indice, actividad_encontrada = coincidencias[0]
 
-    if not validar_dia(nuevo_dia):
-        print("El día ingresado no es válido.\n")
-        return False
+    else:
 
-    nueva_hora_inicio = input("Ingrese la nueva hora de inicio-> ").strip()
+        print(f'\nSe encontraron varias actividades con el nombre "{materia_buscar}":\n')
 
-    if not valida_hora(nueva_hora_inicio):
-        print("La hora de inicio ingresada no es válida.\n")
-        return False
+        for _, actividad in coincidencias:
+            print(
+                f'- {actividad["dia"]} '
+                f'({actividad["hora_inicio"]} - {actividad["hora_fin"]})'
+            )
 
-    nueva_hora_fin = input("Ingrese la nueva hora de fin-> ").strip()
+        while True:
+            dia_buscar = input("\nIngrese el día de la actividad que desea modificar-> ").strip().capitalize()
 
-    if not valida_hora(nueva_hora_fin):
-        print("La hora de fin ingresada no es válida.\n")
-        return False
+            actividad_encontrada = None
+            indice = None
 
-    if not rango_hora(nueva_hora_inicio, nueva_hora_fin):
-        print("La hora de inicio debe ser menor que la hora de fin.\n")
-        return False
+            for i, actividad in coincidencias:
+                if actividad["dia"] == dia_buscar:
+                    indice = i
+                    actividad_encontrada = actividad
+                    break
+
+            if actividad_encontrada is not None:
+                break
+
+            print(f'No existe una materia "{materia_buscar}" el día {dia_buscar}. Intente nuevamente.\n')
+
+    while True:
+        nuevo_dia = input("Ingrese el nuevo día de la semana-> ").strip().capitalize()
+
+        if validar_dia(nuevo_dia):
+            break
+
+        print("El día ingresado no es válido. Intente de nuevo.\n")
+
+    while True:
+        nueva_hora_inicio = input("Ingrese la nueva hora de inicio-> ").strip()
+
+        if valida_hora(nueva_hora_inicio):
+            break
+
+        print("La hora de inicio ingresada no es válida. Intente de nuevo.\n")
+
+    while True:
+        nueva_hora_fin = input("Ingrese la nueva hora de fin-> ").strip()
+
+        if not valida_hora(nueva_hora_fin):
+            print("La hora de fin ingresada no es válida. Intente de nuevo.\n")
+            continue
+
+        if not rango_hora(nueva_hora_inicio, nueva_hora_fin):
+            print("La hora de fin debe ser mayor que la hora de inicio. Intente de nuevo.\n")
+            continue
+        break
 
     nueva_ubicacion = input(f'Ingrese la nueva ubicación (ENTER para mantener "{actividad_encontrada["ubicacion"]}")-> ').strip().capitalize()
 
@@ -154,13 +187,11 @@ def modificar_actividad():
         "ubicacion": nueva_ubicacion
     }
 
-    # Eliminar temporalmente la actividad actual para evitar
-    # que detecte conflicto consigo misma
     horario_sin_actual = horario.copy()
     horario_sin_actual.pop(indice)
 
     if valida_conflicto(horario_sin_actual, horario_temporal):
-        print(f'No se pudo modificar la materia "{materia_buscar} porque el nuevo horario entra en conflicto con otra actividad.\n')
+        print(f'No se pudo modificar la materia "{materia_buscar}" porque el nuevo horario entra en conflicto con otra actividad.\n')
         return False
 
     horario[indice] = horario_temporal
@@ -170,7 +201,6 @@ def modificar_actividad():
     print(f'Materia "{materia_buscar}" modificada exitosamente a {nuevo_dia} de {nueva_hora_inicio} a {nueva_hora_fin} en {nueva_ubicacion}.\n')
 
     return True
-
 
 def eliminar_actividad():
     horario = cargar_horario()
@@ -209,15 +239,7 @@ def generar_reporte():
         print("No hay actividades registradas.\n")
         return False
 
-    dias = [
-        "Lunes",
-        "Martes",
-        "Miercoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-        "Domingo"
-    ]
+    dias = ["Lunes","Martes","Miercoles","Jueves","Viernes"]
 
     reporte = []
 
