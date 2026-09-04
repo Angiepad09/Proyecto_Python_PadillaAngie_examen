@@ -1,10 +1,10 @@
 [
     {
         "materia": "Deporte",
-        "dia": "Martes",
-        "hora_inicio": "11:00",
-        "hora_fin": "13:00",
-        "ubicacion": ""
+        "dia": "Jueves",
+        "hora_inicio": "10:00",
+        "hora_fin": "12:00",
+        "ubicacion": "Estadio"
     },
     {
         "materia": "Fisica",
@@ -12,13 +12,6 @@
         "hora_inicio": "10:00",
         "hora_fin": "12:00",
         "ubicacion": ""
-    },
-    {
-        "materia": "Artistica",
-        "dia": "Miercoles",
-        "hora_inicio": "9:00",
-        "hora_fin": "11:00",
-        "ubicacion": "Salon 404"
     },
     {
         "materia": "Programacion",

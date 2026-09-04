@@ -203,6 +203,7 @@ def modificar_actividad():
     return True
 
 def eliminar_actividad():
+
     horario = cargar_horario()
 
     if not horario:
@@ -210,27 +211,36 @@ def eliminar_actividad():
         return False
 
     materia = input("Ingrese el nombre de la materia o actividad que desea eliminar-> ").strip().capitalize()
-
-    dia = input("Ingrese el día de la semana-> ").strip().capitalize()
-
-    if not validar_dia(dia):
-        print("El día ingresado no es válido.\n")
-        return False
+    existe = False
 
     for actividad in horario:
+        if actividad["materia"] == materia:
+            existe = True
+            break
+
+    if not existe:
+        print(f'No se pudo eliminar la materia "{materia}" porque no existe.\n')
+        return False
+
+    while True:
+        dia = input("Ingrese el día de la semana-> ").strip().capitalize()
+
+        if validar_dia(dia):
+            break
+
+        print("El día ingresado no es válido. Intente de nuevo.\n")
+
+    for actividad in horario:
+
         if (actividad["materia"] == materia and actividad["dia"] == dia):
+
             horario.remove(actividad)
-
             guardar_horario(horario)
-
             print(f'La materia "{materia}" ha sido eliminada del horario del día {dia}.\n')
-
             return True
 
-    print(f'No se pudo eliminar la materia "{materia}" porque no existe en el día {dia}.\n')
-
+    print(f'La materia "{materia}" existe, pero no está registrada para el día {dia}.\n')
     return False
-
 
 def generar_reporte():
     horario = cargar_horario()
@@ -248,7 +258,7 @@ def generar_reporte():
     print("=" * 50)
 
     lineas_mostradas = 0
-    limite_lineas = 10
+    limite_lineas = 5
 
     for dia in dias:
 
