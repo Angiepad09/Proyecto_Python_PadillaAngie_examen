@@ -19,14 +19,14 @@ def registrar_actividad(horario_semanal):
         print("El dia ingresado no es valido. Intente de Nuevo\n")
         
     while True:
-        hora_inicio = input("Ingrese la hora de inicio (HH:MM)-> ").strip()
+        hora_inicio = input("Ingrese la hora de inicio (Formato 24H, Ejemplo: 14:00)-> ").strip()
 
         if valida_hora(hora_inicio):
             break
         print("La hora de inicio no es válida.\n")
 
     while True:
-        hora_fin = input("Ingrese la hora de fin (HH:MM)-> ").strip()
+        hora_fin = input("Ingrese la hora de fin (Formato 24H, Ejemplo: 16:00)-> ").strip()
 
         if not valida_hora(hora_fin):
             print("La hora de fin no es válida.\n")
@@ -37,7 +37,7 @@ def registrar_actividad(horario_semanal):
             continue
         break
     
-    ubicacion = input("Ingrese la ubicacion (opcional, ejemplo Salon 305)->").strip().capitalize()
+    ubicacion = input("Ingrese la ubicacion (Presione ENTER para omitir)->").strip().capitalize()
 
     horario_temporal ={
         "materia": materia,
@@ -155,7 +155,7 @@ def modificar_actividad():
         print("El día ingresado no es válido. Intente de nuevo.\n")
 
     while True:
-        nueva_hora_inicio = input("Ingrese la nueva hora de inicio-> ").strip()
+        nueva_hora_inicio = input("Ingrese la nueva hora de inicio (Formato 24H - Ejemplo: 14:00)-> ").strip()
 
         if valida_hora(nueva_hora_inicio):
             break
@@ -163,7 +163,7 @@ def modificar_actividad():
         print("La hora de inicio ingresada no es válida. Intente de nuevo.\n")
 
     while True:
-        nueva_hora_fin = input("Ingrese la nueva hora de fin-> ").strip()
+        nueva_hora_fin = input("Ingrese la nueva hora de fin (Formato 24H - Ejemplo: 16:00)-> ").strip()
 
         if not valida_hora(nueva_hora_fin):
             print("La hora de fin ingresada no es válida. Intente de nuevo.\n")
@@ -223,7 +223,7 @@ def eliminar_actividad():
         return False
 
     while True:
-        dia = input("Ingrese el día de la semana-> ").strip().capitalize()
+        dia = input("Ingrese el día de la semana (Lunes, Martes, Miercoles, Jueves, Viernes)-> ").strip().capitalize()
 
         if validar_dia(dia):
             break
