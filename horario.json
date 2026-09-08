@@ -7,24 +7,24 @@
         "ubicacion": "Estadio"
     },
     {
-        "materia": "Fisica",
-        "dia": "Lunes",
+        "materia": "Excel",
+        "dia": "Miercoles",
+        "hora_inicio": "6:00",
+        "hora_fin": "9:00",
+        "ubicacion": "Spuntink"
+    },
+    {
+        "materia": "Word",
+        "dia": "Viernes",
         "hora_inicio": "10:00",
         "hora_fin": "12:00",
         "ubicacion": ""
     },
     {
-        "materia": "Programacion",
-        "dia": "Viernes",
+        "materia": "Python",
+        "dia": "Lunes",
         "hora_inicio": "9:00",
         "hora_fin": "10:00",
-        "ubicacion": "Salon 202"
-    },
-    {
-        "materia": "Fisica",
-        "dia": "Viernes",
-        "hora_inicio": "14:00",
-        "hora_fin": "16:00",
-        "ubicacion": "Laboratorio fisica"
+        "ubicacion": ""
     }
 ]

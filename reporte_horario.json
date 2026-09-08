@@ -3,10 +3,21 @@
         "dia": "Lunes",
         "eventos": [
             {
-                "materia": "Fisica",
-                "hora_inicio": "10:00",
-                "hora_fin": "12:00",
+                "materia": "Python",
+                "hora_inicio": "9:00",
+                "hora_fin": "10:00",
                 "ubicacion": ""
+            }
+        ]
+    },
+    {
+        "dia": "Miercoles",
+        "eventos": [
+            {
+                "materia": "Excel",
+                "hora_inicio": "6:00",
+                "hora_fin": "9:00",
+                "ubicacion": "Spuntink"
             }
         ]
     },
@@ -25,16 +36,10 @@
         "dia": "Viernes",
         "eventos": [
             {
-                "materia": "Programacion",
-                "hora_inicio": "9:00",
-                "hora_fin": "10:00",
-                "ubicacion": "Salon 202"
-            },
-            {
-                "materia": "Fisica",
-                "hora_inicio": "14:00",
-                "hora_fin": "16:00",
-                "ubicacion": "Laboratorio fisica"
+                "materia": "Word",
+                "hora_inicio": "10:00",
+                "hora_fin": "12:00",
+                "ubicacion": ""
             }
         ]
     }
