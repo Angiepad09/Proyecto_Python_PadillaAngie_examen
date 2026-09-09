@@ -26,6 +26,15 @@ while True:
 
         elif opcion_menu==5:
             generar_reporte()
+##################################################################################            
+        elif opcion_menu==7:
+            buscar_actividad() 
+        
+        elif opcion_menu==8:
+            estadistica()      
+            
+            
+##################################################################################            
         else:
             print("Las opciones del menu estan entre 1 al 6. Intente de Nuevo\n")
 
