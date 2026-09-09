@@ -311,466 +311,87 @@ def generar_reporte():
 
     return True
 
-###################################################################################################
-def buscar_actividad():
+def exportar_calendario():
+
     horario = cargar_horario()
 
     if not horario:
         print("No hay actividades registradas.\n")
         return False
-    print("-------------- Busqueda por: --------------")
-    print("1.Buscar por actividad\n2.Buscar por dia\n3.Buscar por ubicacion\n4.Buscar por hora")
-    
-    try:
-        opcion_submenu=int(input("Seleccione una opcion (ejemplo 1)->"))
-        print()
-    except ValueError:
-        print("Opcion no valida, debe digitar numeros")
-        return
-        
-    encontrados=[]
-     
-        
-    if opcion_submenu==1:
-        
-        materia = input("Ingrese el nombre de la materia o actividad que desea buscar-> ").strip().capitalize()
-        for actividad in horario:
-            if actividad["materia"] == materia:
-                encontrados.append(actividad)
-                
-    elif opcion_submenu==2:
-        
-        dia = input("Ingrese el día que desea buscar -> ").strip().capitalize()
 
-        if not validar_dia(dia):
-            print("El día ingresado no es válido.\n")
-            return
+    dias = ["Lunes","Martes","Miercoles","Jueves","Viernes"]
 
-        for actividad in horario:
-            if actividad["dia"] == dia:
-                encontrados.append(actividad)
+    reporte = []
 
-        if not encontrados:
-            print(f"El día {dia} está libre.\n")
-            return
-                                
-    elif opcion_submenu==3:
-        
-        ubicacion= input("Ingrese la ubicacion que buscar-> ").strip().capitalize()
-        for actividad in horario:
-            if actividad["ubicacion"] == ubicacion:
-                encontrados.append(actividad)
-                
-    elif opcion_submenu == 4:
-        hora = input("Ingrese la hora (Formato 24H - Ejemplo: 14:00) -> ").strip()
+    print("\n" + "=" * 50)
+    print("REPORTE DEL CALENDARIO".center(50))
+    print("=" * 50)
 
-        if not valida_hora(hora):
-            print("La hora ingresada no es válida. Intente de nuevo.\n")
-            return
-
-        for actividad in horario:
-
-            inicio = convertir_minutos(actividad["hora_inicio"])
-            fin = convertir_minutos(actividad["hora_fin"])
-            hora_buscada = convertir_minutos(hora)
-            if inicio <= hora_buscada < fin:
-                encontrados.append(actividad)
-        if not encontrados:
-            print(f"No hay actividades registradas a las {hora}.\n")
-            return
-
-    else: 
-            print("Opcion no valida, intente de nuevo")
-            return
-        
-    if not encontrados:
-        print(f'No se pudo encontrar porque no existe.\n')
-        
-    for actividad in encontrados:
-        print(f'Materia: {actividad["materia"]}\nDía: {actividad["dia"]}\nHorario: {actividad["hora_inicio"]} - {actividad["hora_fin"]}\nUbicación: {actividad["ubicacion"]}\n')
-      
-    with open("resultado_busqueda.json","w",encoding="utf-8") as archivo:
-        json.dump(encontrados,archivo,indent=4,ensure_ascii=False)
-
-    print("Resultados guardados en resultado_busqueda.json")
-###################################################################################################
-def estadistica():
-
-    horario = cargar_horario()
-
-    if not horario:
-        print("No hay actividades regi  stradas.\n")
-        return
-    
-    cantidad_actividad=len(horario)
-    total_horas = 0
-    
-
-    dias = {
-        "Lunes": 0,
-        "Martes": 0,
-        "Miercoles": 0,
-        "Jueves": 0,
-        "Viernes": 0
-    }
-    
-
-    for actividad in horario:
-
-        inicio = convertir_minutos(actividad["hora_inicio"])
-        fin = convertir_minutos(actividad["hora_fin"])
-
-        duracion = (fin - inicio) / 60
-        total_horas += duracion
-        dias[actividad["dia"]] += duracion
-        
-    dias_con_actividades = sum(1 for horas in dias.values() if horas > 0)
-    dia_mas_ocupado = max(dias, key=dias.get)
-    dia_menos_ocupado = min(dias, key=dias.get)
-    
-    if dias_con_actividades > 0:        
-        promedio = total_horas / dias_con_actividades
-    else:
-        promedio = 0
-        
-    estadisticas = {
-        "cantidad_actividades": cantidad_actividad,
-        "horas_programadas": total_horas,
-        "dia_mas_ocupado": dia_mas_ocupado,
-        "horas_dia_mas_ocupado": dias[dia_mas_ocupado],
-        "dia_menos_ocupado": dias[dia_menos_ocupado],
-        "promedio":promedio
-        }
-    
-    with open("estadisticas.json", "w", encoding="utf-8") as archivo:
-        json.dump(estadisticas,archivo,indent=4,ensure_ascii=False)
-
-    print("\n" + "=" * 40)
-    print("ESTADISTICAS DEL HORARIO")
-    print("=" * 40)
-    print(f"Total de actividades: {cantidad_actividad}")
-    print(f"Horas programadas: {total_horas:.1f}")
-    print(f"Dia mas ocupado: {dia_mas_ocupado} con {dias[dia_mas_ocupado]:.1f} horas")
-    print(f"Dia menos ocupado: {dia_menos_ocupado} con {dias[dia_menos_ocupado]:.1f} horas")
-    print(f"Promedio diario: {promedio:.1f} horas")
-    
-    print("\nHoras por día:")
-
-    for dia, horas in dias.items():
-        print(f"{dia}: {horas:.1f} horas")
-
-###################################################################################################
-def buscar_espacios_libres():
-
-    horario = cargar_horario()
-
-    while True:
-        dia = input("Ingrese el día que desea consultar (Lunes, Martes, Miercoles, Jueves, Viernes)-> ").strip().capitalize()
-
-        if validar_dia(dia):
-            break
-        print("El día ingresado no es válido. Intente de nuevo.\n")
-
-    while True:
-        hora_desde = input("Ingrese hora inicial de consulta (Formato 24H, Ejemplo: 08:00)-> ").strip()
-
-        if valida_hora(hora_desde):
-            break
-        print("La hora ingresada no es válida. Intente de nuevo.\n")
-
-    while True:
-        hora_hasta = input("Ingrese hora final de consulta (Formato 24H, Ejemplo: 18:00)-> ").strip()
-
-        if not valida_hora(hora_hasta):
-            print("La hora ingresada no es válida. Intente de nuevo.\n")
-            continue
-
-        if not rango_hora(hora_desde, hora_hasta):
-            print("La hora final debe ser mayor que la hora inicial. Intente de nuevo.\n")
-            continue
-        break
-
-    actividades_dia = [actividad for actividad in horario if actividad["dia"] == dia]
-    actividades_dia.sort(key=lambda actividad: convertir_minutos(actividad["hora_inicio"]))
-
-    inicio_consulta = convertir_minutos(hora_desde)
-    fin_consulta = convertir_minutos(hora_hasta)
-
-    def formato(minutos):
-        return f"{minutos // 60:02d}:{minutos % 60:02d}"
-
-    espacios_libres = []
-    actual = inicio_consulta
-
-    for actividad in actividades_dia:
-
-        inicio_actividad = convertir_minutos(actividad["hora_inicio"])
-        fin_actividad = convertir_minutos(actividad["hora_fin"])
-
-        if inicio_actividad >= fin_consulta:
-            break
-
-        if fin_actividad <= inicio_consulta:
-            continue
-
-        if inicio_actividad > actual:
-            espacios_libres.append((actual, min(inicio_actividad, fin_consulta)))
-
-        if fin_actividad > actual:
-            actual = fin_actividad
-
-    if actual < fin_consulta:
-        espacios_libres.append((actual, fin_consulta))
-
-    print("\n" + "=" * 42)
-    print(f"ESPACIOS LIBRES DEL {dia.upper()}")
-    print("=" * 42)
-
-    if not espacios_libres:
-        print("No hay espacios libres disponibles en ese rango.\n")
-        return
-
-    for inicio, fin in espacios_libres:
-        print(f"{formato(inicio)} - {formato(fin)}")
-    print()
-
-###################################################################################################
-def sugerir_horario():
-
-    horario = cargar_horario()
-
-    while True:
-        dia = input("Ingrese el día de la actividad (Lunes, Martes, Miercoles, Jueves, Viernes)-> ").strip().capitalize()
-
-        if validar_dia(dia):
-            break
-        print("El día ingresado no es válido. Intente de nuevo.\n")
-
-    while True:
-        try:
-            duracion_horas = float(input("Ingrese la duración de la actividad en horas (Ejemplo: 2)-> "))
-            if duracion_horas > 0:
-                break
-            print("La duración debe ser mayor que cero. Intente de nuevo.\n")
-        except ValueError:
-            print("Debe ingresar un número. Intente de nuevo.\n")
-
-    while True:
-        hora_desde = input("Ingrese la hora desde la cual puede programarse (Formato 24H, Ejemplo: 08:00)-> ").strip()
-
-        if valida_hora(hora_desde):
-            break
-        print("La hora ingresada no es válida. Intente de nuevo.\n")
-
-    while True:
-        hora_hasta = input("Ingrese la hora máxima hasta la cual puede programarse (Formato 24H, Ejemplo: 18:00)-> ").strip()
-
-        if not valida_hora(hora_hasta):
-            print("La hora ingresada no es válida. Intente de nuevo.\n")
-            continue
-
-        if not rango_hora(hora_desde, hora_hasta):
-            print("La hora final debe ser mayor que la hora inicial. Intente de nuevo.\n")
-            continue
-        break
-
-    actividades_dia = [actividad for actividad in horario if actividad["dia"] == dia]
-    actividades_dia.sort(key=lambda actividad: convertir_minutos(actividad["hora_inicio"]))
-
-    inicio_busqueda = convertir_minutos(hora_desde)
-    fin_busqueda = convertir_minutos(hora_hasta)
-    duracion_minutos = int(duracion_horas * 60)
-
-    def formato(minutos):
-        return f"{minutos // 60:02d}:{minutos % 60:02d}"
-
-    espacios_libres = []
-    actual = inicio_busqueda
-
-    for actividad in actividades_dia:
-
-        inicio_actividad = convertir_minutos(actividad["hora_inicio"])
-        fin_actividad = convertir_minutos(actividad["hora_fin"])
-
-        if inicio_actividad >= fin_busqueda:
-            break
-
-        if fin_actividad <= inicio_busqueda:
-            continue
-
-        if inicio_actividad > actual:
-            espacios_libres.append((actual, min(inicio_actividad, fin_busqueda)))
-
-        if fin_actividad > actual:
-            actual = fin_actividad
-
-    if actual < fin_busqueda:
-        espacios_libres.append((actual, fin_busqueda))
-
-    horarios_disponibles = []
-
-    for inicio, fin in espacios_libres:
-        inicio_slot = inicio
-        while inicio_slot + duracion_minutos <= fin:
-            horarios_disponibles.append((inicio_slot, inicio_slot + duracion_minutos))
-            inicio_slot += duracion_minutos
-
-    print("\n" + "=" * 42)
-    print("HORARIOS DISPONIBLES")
-    print("=" * 42)
-
-    if not horarios_disponibles:
-        print(f"No existen espacios disponibles para una actividad de esa duración.\n")
-        return
-
-    for numero, (inicio, fin) in enumerate(horarios_disponibles, start=1):
-        print(f"{numero}. {formato(inicio)} - {formato(fin)}")
-    print()
-    
-###############################################################################
-
-def calcular_duracion():
-
-    horario = cargar_horario()
-
-    if not horario:
-        print("No hay actividades registradas.\n")
-        return
-
-    for actividad in horario:
-
-        inicio = convertir_minutos(
-            actividad["hora_inicio"]
-        )
-
-        fin = convertir_minutos(
-            actividad["hora_fin"]
-        )
-
-        duracion = fin - inicio
-
-        horas = duracion // 60
-        minutos = duracion % 60
-
-        print(
-            f"\nMateria: {actividad['materia']}"
-        )
-
-        print(
-            f"Duracion: {horas} hora(s) "
-            f"y {minutos} minuto(s)"
-        )
-
-###############################################################################################
-
-def espacios_libres():
-
-    horario = cargar_horario()
-
-    if not horario:
-        print("No hay actividades registradas.\n")
-        return
-
-    dias = [
-        "Lunes",
-        "Martes",
-        "Miercoles",
-        "Jueves",
-        "Viernes"
-    ]
-
-    inicio_jornada = "06:00"
-    fin_jornada = "22:00"
+    lineas_mostradas = 0
+    limite_lineas = 1
 
     for dia in dias:
 
-        actividades_dia = []
+        eventos = []
 
-        for actividad in horario:
-
-            if actividad["dia"] == dia:
-                actividades_dia.append(actividad)
-
-        actividades_dia.sort(
-            key=lambda x:
-            convertir_minutos(x["hora_inicio"])
-        )
-
-        print(f"\n=== {dia} ===")
+        actividades_dia = [
+            actividad
+            for actividad in horario
+            if actividad["dia"] == dia
+        ]
 
         if not actividades_dia:
-            print("Dia completamente libre.")
+            print(f"\n=== {dia} ===")
+            print("Dia sin nada que hacer.")
+            
+            lineas_mostradas += 1
+            if lineas_mostradas >= limite_lineas:
+                input("\nPresione ENTER para continuar...")
+                lineas_mostradas = 0
+            reporte.append({"dia": dia,"eventos": []})
             continue
 
-        hora_actual = inicio_jornada
+        actividades_dia.sort(key=lambda actividad:convertir_minutos(actividad["hora_inicio"]))
 
-        for actividad in actividades_dia:
+        if actividades_dia:
 
-            if convertir_minutos(hora_actual) < convertir_minutos(actividad["hora_inicio"]):
+            print(f"\n{dia}:")
+
+            lineas_mostradas += 1
+
+            for actividad in actividades_dia:
 
                 print(
-                    f"Libre de {hora_actual} "
-                    f"a {actividad['hora_inicio']}"
+                    f'- {actividad["materia"]} '
+                    f'({actividad["hora_inicio"]} - '
+                    f'{actividad["hora_fin"]}) '
+                    f'en {actividad["ubicacion"]}'
                 )
 
-            hora_actual = actividad["hora_fin"]
+                lineas_mostradas += 1
 
-        if convertir_minutos(hora_actual) < convertir_minutos(fin_jornada):
+                if len(actividad["ubicacion"])==0:
+                    actividad["ubicacion"]="null"
 
-            print(
-                f"Libre de {hora_actual} "
-                f"a {fin_jornada}"
-            )
-########################################################################################################################
+                eventos.append({
+                    "materia": actividad["materia"],
+                    "hora_inicio": actividad["hora_inicio"],
+                    "hora_fin": actividad["hora_fin"],
+                    "ubicacion": actividad["ubicacion"]
+                })
+ 
 
-def contar_por_dia():
+                if lineas_mostradas >= limite_lineas:
+                    input("\nPresione ENTER para continuar...")
+                    lineas_mostradas = 0
 
-    horario = cargar_horario()
+            print("-" * 42)
 
-    if not horario:
-        print("No hay actividades registradas.\n")
-        return
+            reporte.append({"dia": dia,"eventos": eventos})
 
-    dias = [
-        "Lunes",
-        "Martes",
-        "Miercoles",
-        "Jueves",
-        "Viernes"
-    ]
+    with open("reporte_calendario.json","w",encoding="utf-8") as archivo:
+        json.dump(reporte,archivo,indent=2, ensure_ascii=False)
 
-    print("\nRESUMEN POR DIA")
-    print("-" * 40)
+    print("\nReporte generado y guardado en reporte_calendario.json'.\n")
 
-    for dia in dias:
-
-        contador = 0
-        horas_totales = 0
-
-        for actividad in horario:
-
-            if actividad["dia"] == dia:
-
-                contador += 1
-
-                inicio = convertir_minutos(
-                    actividad["hora_inicio"]
-                )
-
-                fin = convertir_minutos(
-                    actividad["hora_fin"]
-                )
-
-                horas_totales += (fin - inicio) / 60
-
-        print(
-            f"{dia}: "
-            f"{contador} actividad(es) - "
-            f"{horas_totales:.1f} hora(s)"
-        )
-        
-##############################################################################################################    
-    
-
-    
-    
+    return True

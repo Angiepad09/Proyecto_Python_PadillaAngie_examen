@@ -36,6 +36,12 @@
         "dia": "Viernes",
         "eventos": [
             {
+                "materia": "Python",
+                "hora_inicio": "9:00",
+                "hora_fin": "10:00",
+                "ubicacion": ""
+            },
+            {
                 "materia": "Word",
                 "hora_inicio": "10:00",
                 "hora_fin": "12:00",

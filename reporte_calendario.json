@@ -1,0 +1,56 @@
+[
+  {
+    "dia": "Lunes",
+    "eventos": [
+      {
+        "materia": "Python",
+        "hora_inicio": "9:00",
+        "hora_fin": "10:00",
+        "ubicacion": "null"
+      }
+    ]
+  },
+  {
+    "dia": "Martes",
+    "eventos": []
+  },
+  {
+    "dia": "Miercoles",
+    "eventos": [
+      {
+        "materia": "Excel",
+        "hora_inicio": "6:00",
+        "hora_fin": "9:00",
+        "ubicacion": "Spuntink"
+      }
+    ]
+  },
+  {
+    "dia": "Jueves",
+    "eventos": [
+      {
+        "materia": "Deporte",
+        "hora_inicio": "10:00",
+        "hora_fin": "12:00",
+        "ubicacion": "Estadio"
+      }
+    ]
+  },
+  {
+    "dia": "Viernes",
+    "eventos": [
+      {
+        "materia": "Python",
+        "hora_inicio": "9:00",
+        "hora_fin": "10:00",
+        "ubicacion": "null"
+      },
+      {
+        "materia": "Word",
+        "hora_inicio": "10:00",
+        "hora_fin": "12:00",
+        "ubicacion": "null"
+      }
+    ]
+  }
+]
